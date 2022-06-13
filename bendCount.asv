@@ -1,0 +1,216 @@
+clc
+close all
+clear all
+
+trainPath='raw_images\';    
+theFiles  = dir([trainPath '*.png']);
+disp(length(theFiles));
+count = 1;
+train_num = length(theFiles);
+sort_nat_name=sort_nat({theFiles.name}); 
+
+%read data
+HTP = xlsread('HeadTailPharynx.csv');
+PP = xlsread('PeakPoints.csv');
+IP = xlsread('InflectionPoints.csv');
+
+head = HTP(:,1:2);
+tail = HTP(:,3:4);
+pharynx = HTP(:,5:6);
+
+[m,n] = size(PP);
+[p,q] = size(IP);
+
+%%存储所有的拐点角度
+Data = zeros(100,5);
+
+%%存储最小的角度
+anglechange=[];
+maxDist=[];
+
+for k = 1:train_num
+    fullFileName = sort_nat_name{k};
+%     fprintf(1, 'Now reading %s\n', fullFileName);
+
+    I = imread([trainPath fullFileName]);
+    count = count +1;
+    %%不在前端显示图像
+    set(0,'DefaultFigureVisible', 'off')
+    
+    
+% %     显示头尾咽
+    figure;
+    imshow(I);
+    hold on;
+    plot(head(k,1),head(k,2),'cx','MarkerSize',12,'LineWidth',2 ,'color','r');%X显示
+    plot(tail(k,1),tail(k,2),'.c','MarkerSize',15 ,'color','g')%点显示
+    plot(pharynx(k,1),pharynx(k,2),'.c','MarkerSize',15 ,'color','m')%点显示
+    
+    %判断GD和DFD数量是否一致
+    PPnum = 0;
+    IPnum = 0;
+    
+    for n1=1:n
+        if isnan( PP(k,n1) )
+            PPnum = PPnum+1;
+        end
+    end
+    for n2=1:q
+        if isnan( IP(k,n2) )
+            IPnum = IPnum+1;
+        end
+    end
+    
+    PPnum1 = n - PPnum;
+    IPnum1 = q - IPnum;
+    
+    if ( PPnum1 +2 ) ~= IPnum1
+        fprintf('not consist %d\n', k);
+    end
+    
+    %%存储每一行角度的数组
+    angles = [];
+    dists = [];
+    %用黄色画出gd
+    %设置每次增加的步长为2
+    for i = 1:2:n-1
+        if isnan( PP(k,i) )
+            break;
+        end
+        plot(PP(k,i),PP(k,i+1),'.c','MarkerSize',15 ,'color','y')%点显示
+        
+        %%计算拐点的弯曲角度
+        flag = calculateFzdPosition(pharynx(k,1),pharynx(k,2),tail(k,1),tail(k,2),PP(k,i),PP(k,i+1));
+        angle = bendAngle( IP(k,i),IP(k,i+1),PP(k,i),PP(k,i+1),IP(k,i+2),IP(k,i+3) );
+        angle = angle * flag;
+        angle=roundn(angle,-2);
+%         disp(angle);
+          
+        dist = Dist( PP(k,i),PP(k,i+1),pharynx(k,1),pharynx(k,2),tail(k,1),tail(k,2) ); 
+        dist = dist * flag;
+        angles = [angles angle];
+        dists = [dists dist];
+        
+        
+    end
+    Data(k,1:length(angles)) = angles;
+    Datadist(k,1:length(dists)) = dists;
+    
+    %%遍历angles向量，找出角度最小的
+    %计算数组角度之间的差值
+    a=length(angles);
+    min = abs( angles(1) );
+    index = 1;
+    
+    for t=1:a
+        if min > abs( angles(t) )
+            min = abs( angles(t) );
+            index = t;
+        end
+    end
+    %%将计算出来的角度存入数组
+    anglechange = [anglechange angles(index)];
+
+    
+     %%遍历dists向量，找出距离最大的
+    %计算数组距离之间的差值
+    b=length(dists);
+    max = abs( dists(1) );
+    index1 = 1;
+    
+    for t=1:b
+        if max < abs( dists(t) )
+            max = abs( dists(t) );
+            index1 = t;
+        end
+    end
+    %%将计算出来的角度存入数组
+    maxDist = [maxDist dists(index)];
+
+
+     %用蓝色画出dfd
+    %设置每次增加的步长为2
+     for i = 1:2:q-1
+        if isnan( IP(k,i) )
+            break;
+        end
+%         plot(DFD(k,i),DFD(k,i+1),'.c','MarkerSize',15 ,'color','b')%点显示
+        plot(IP(k,i),IP(k,i+1),'.c','MarkerSize',15 ,'color',[0 1 1])%点显示
+     end
+    
+%      在咽部和尾之间划线
+    line([pharynx(k,1),tail(k,1)], [pharynx(k,2),tail(k,2)], 'Color', 'b');
+     
+    %把在图像上面画的点保存到文件夹中 
+    gfframe=getframe(gcf);
+    gffim=frame2im(gfframe);
+    image_name=strcat('result_images\image_',num2str(k));
+    image_name=strcat(image_name,'.jpg');
+
+    imwrite(gffim,image_name);
+   
+
+end
+
+% 求根据角度变化求得bodybend次数
+bodyBendnum = 0;
+for i = 1:length(anglechange)-1
+    if sign( anglechange(i) ) *sign(  anglechange(i+1) )  == -1
+        if i-3>=1 && i+4<=length(maxDist)
+            s1 = sign( anglechange(i) ) *sign(  anglechange(i-1) );
+            
+            s4 = sign( anglechange(i+1) ) *sign(  anglechange(i+2) );
+           
+            if s1 == 1 && s2 == 1 && s4 == 1 && s5 == 1
+%             if s1 == 1 && s2 == 1 && s3 == 1 && s4 == 1 && s5 == 1 && s6 == 1
+                bodyBendnum = bodyBendnum + 1;
+            end
+            
+        end
+    end
+end
+fprintf('Angle: the number of body bends are %d\n', bodyBendnum) 
+
+% 求根据角度变化求得bodybend次数
+bodyBendnum1 = 0;
+bodyBendnum2 = 0;
+for i = 1:length(maxDist)-1
+    if sign( maxDist(i) ) *sign(  maxDist(i+1) )  == -1
+        if i-3>=1 && i+4<=length(maxDist)
+            s1 = sign( maxDist(i) ) *sign(  maxDist(i-1) );
+           
+            s4 = sign( maxDist(i+1) ) *sign(  maxDist(i+2) );
+          
+            if s1 == 1  && s4 == 1 
+                if abs( maxDist(i) )>15 || abs( maxDist(i+1) )>15
+                     bodyBendnum1 = bodyBendnum1 + 1;
+                end
+%             if s1 == 1 && s2 == 1 && s4 == 1 && s5 == 1
+%             if s1 == 1 && s2 == 1 && s3 == 1 && s4 == 1 && s5 == 1 && s6 == 1
+
+               
+            end
+            %%%按距离
+            if s1 == 1 && s2 == 1 && s4 == 1 && s5 == 1
+               bodyBendnum2 = bodyBendnum2 + 1;
+            end
+            
+        end
+        
+    end
+end
+fprintf('Dist: the number of body bends are %d\n', bodyBendnum2) 
+
+fprintf('Dist阈值: the number of body bends are %d\n', bodyBendnum1) 
+
+
+
+%保存角度数据
+xlswrite('bendangle.xls', Data)
+
+xlswrite('anglechange.xls', anglechange')
+%保存最大距离数据
+xlswrite('maxDist.xls', maxDist')
+
+% fprintf('The number of head thrash are %d\n', headThrashesnum) 
+
