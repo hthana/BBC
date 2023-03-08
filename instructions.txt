@@ -1,0 +1,6 @@
+1.Algorithm for head and tail localization is referenced from 'Mane M, Deshmukh A, Iliff A: Head and Tail Localization of C. elegans; 2020.'The relevant code can be obtained from 'https://github.com/mansimane/WormML'.
+In this paper, the runtime environment is available from the file 'requirements.txt'.
+
+2.'feature points extraction' algorithm runs through Visual Studio 2013. The images to be processed need to be placed under the folder 'samples'.
+
+3.demo. Put the image in the folder 'result_images' and run 'bendCount' to get the counting result.
