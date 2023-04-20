@@ -1,54 +1,54 @@
-﻿生成启动时间为 2022/9/22 20:27:55。
-     1>项目“D:\Body-Bend-Analysis\feature points extraction\feature points extraction\feature points extraction.vcxproj”在节点 2 上(Build 个目标)。
+﻿生成启动时间为 2023/4/20 17:37:12。
+     1>项目“C:\Users\HP\BBC\Body-Bend-Count\feature points extraction\feature points extraction\feature points extraction.vcxproj”在节点 2 上(Build 个目标)。
      1>ClCompile:
          F:\rjaz\VS2013\VC\bin\CL.exe /c /Iinc /Iinc\opencv /Iinc\opencv2 /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MTd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"stdafx.h" /Fp".\tmp\feature points extraction.pch" /Fo".\tmp\\" /Fd".\tmp\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt "feature points extraction.cpp"
          feature points extraction.cpp
-     1>d:\body-bend-analysis\feature points extraction\feature points extraction\inc\opencv2\core\mat.hpp(1965): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-     1>d:\body-bend-analysis\feature points extraction\feature points extraction\inc\opencv2\core\persistence.hpp : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-     1>d:\body-bend-analysis\feature points extraction\feature points extraction\inc\opencv2\core\utility.hpp : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-     1>d:\body-bend-analysis\feature points extraction\feature points extraction\feature points extraction.cpp(100): warning C4018: “<”: 有符号/无符号不匹配
-     1>d:\body-bend-analysis\feature points extraction\feature points extraction\feature points extraction.cpp(187): warning C4244: “初始化”: 从“double”转换到“int”，可能丢失数据
-     1>d:\body-bend-analysis\feature points extraction\feature points extraction\feature points extraction.cpp(191): warning C4018: “<”: 有符号/无符号不匹配
-     1>d:\body-bend-analysis\feature points extraction\feature points extraction\feature points extraction.cpp(193): warning C4018: “<”: 有符号/无符号不匹配
-     1>d:\body-bend-analysis\feature points extraction\feature points extraction\feature points extraction.cpp(202): warning C4018: “<”: 有符号/无符号不匹配
-     1>d:\body-bend-analysis\feature points extraction\feature points extraction\feature points extraction.cpp(208): warning C4018: “<”: 有符号/无符号不匹配
-     1>d:\body-bend-analysis\feature points extraction\feature points extraction\feature points extraction.cpp(216): warning C4018: “<”: 有符号/无符号不匹配
-     1>d:\body-bend-analysis\feature points extraction\feature points extraction\feature points extraction.cpp(222): warning C4018: “<”: 有符号/无符号不匹配
-     1>d:\body-bend-analysis\feature points extraction\feature points extraction\feature points extraction.cpp(229): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
-     1>d:\body-bend-analysis\feature points extraction\feature points extraction\feature points extraction.cpp(253): warning C4018: “<=”: 有符号/无符号不匹配
-     1>d:\body-bend-analysis\feature points extraction\feature points extraction\feature points extraction.cpp(254): warning C4018: “<=”: 有符号/无符号不匹配
-     1>d:\body-bend-analysis\feature points extraction\feature points extraction\feature points extraction.cpp(321): warning C4305: “初始化”: 从“double”到“float”截断
-     1>d:\body-bend-analysis\feature points extraction\feature points extraction\feature points extraction.cpp(327): warning C4244: “初始化”: 从“float”转换到“int”，可能丢失数据
-     1>d:\body-bend-analysis\feature points extraction\feature points extraction\feature points extraction.cpp(327): warning C4018: “<”: 有符号/无符号不匹配
-     1>d:\body-bend-analysis\feature points extraction\feature points extraction\feature points extraction.cpp(341): warning C4018: “<”: 有符号/无符号不匹配
-     1>d:\body-bend-analysis\feature points extraction\feature points extraction\feature points extraction.cpp(352): warning C4018: “<”: 有符号/无符号不匹配
-     1>d:\body-bend-analysis\feature points extraction\feature points extraction\feature points extraction.cpp(354): warning C4018: “>”: 有符号/无符号不匹配
-     1>d:\body-bend-analysis\feature points extraction\feature points extraction\feature points extraction.cpp(389): warning C4018: “>”: 有符号/无符号不匹配
-     1>d:\body-bend-analysis\feature points extraction\feature points extraction\feature points extraction.cpp(466): warning C4018: “<”: 有符号/无符号不匹配
-     1>d:\body-bend-analysis\feature points extraction\feature points extraction\feature points extraction.cpp(472): warning C4018: “<”: 有符号/无符号不匹配
-     1>d:\body-bend-analysis\feature points extraction\feature points extraction\feature points extraction.cpp(486): warning C4018: “<”: 有符号/无符号不匹配
-     1>d:\body-bend-analysis\feature points extraction\feature points extraction\feature points extraction.cpp(504): warning C4018: “>”: 有符号/无符号不匹配
-     1>d:\body-bend-analysis\feature points extraction\feature points extraction\feature points extraction.cpp(519): warning C4018: “>”: 有符号/无符号不匹配
-     1>d:\body-bend-analysis\feature points extraction\feature points extraction\feature points extraction.cpp(532): warning C4018: “<”: 有符号/无符号不匹配
-     1>d:\body-bend-analysis\feature points extraction\feature points extraction\feature points extraction.cpp(536): warning C4018: “<”: 有符号/无符号不匹配
-     1>d:\body-bend-analysis\feature points extraction\feature points extraction\feature points extraction.cpp(540): warning C4018: “<”: 有符号/无符号不匹配
-     1>d:\body-bend-analysis\feature points extraction\feature points extraction\feature points extraction.cpp(547): warning C4018: “<”: 有符号/无符号不匹配
-     1>d:\body-bend-analysis\feature points extraction\feature points extraction\feature points extraction.cpp(549): warning C4018: “<”: 有符号/无符号不匹配
-     1>d:\body-bend-analysis\feature points extraction\feature points extraction\feature points extraction.cpp(614): warning C4305: “初始化”: 从“double”到“float”截断
-     1>d:\body-bend-analysis\feature points extraction\feature points extraction\feature points extraction.cpp(623): warning C4018: “<”: 有符号/无符号不匹配
-     1>d:\body-bend-analysis\feature points extraction\feature points extraction\feature points extraction.cpp(628): warning C4018: “<”: 有符号/无符号不匹配
-     1>d:\body-bend-analysis\feature points extraction\feature points extraction\feature points extraction.cpp(633): warning C4018: “<”: 有符号/无符号不匹配
-     1>d:\body-bend-analysis\feature points extraction\feature points extraction\feature points extraction.cpp(725): warning C4018: “<”: 有符号/无符号不匹配
-     1>d:\body-bend-analysis\feature points extraction\feature points extraction\feature points extraction.cpp(729): warning C4018: “<”: 有符号/无符号不匹配
-     1>d:\body-bend-analysis\feature points extraction\feature points extraction\feature points extraction.cpp(744): warning C4018: “<”: 有符号/无符号不匹配
+     1>c:\users\hp\bbc\body-bend-count\feature points extraction\feature points extraction\inc\opencv2\core\mat.hpp(1918): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+     1>c:\users\hp\bbc\body-bend-count\feature points extraction\feature points extraction\inc\opencv2\core\persistence.hpp : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+     1>c:\users\hp\bbc\body-bend-count\feature points extraction\feature points extraction\inc\opencv2\core\utility.hpp : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+     1>c:\users\hp\bbc\body-bend-count\feature points extraction\feature points extraction\feature points extraction.cpp(100): warning C4018: “<”: 有符号/无符号不匹配
+     1>c:\users\hp\bbc\body-bend-count\feature points extraction\feature points extraction\feature points extraction.cpp(187): warning C4244: “初始化”: 从“double”转换到“int”，可能丢失数据
+     1>c:\users\hp\bbc\body-bend-count\feature points extraction\feature points extraction\feature points extraction.cpp(191): warning C4018: “<”: 有符号/无符号不匹配
+     1>c:\users\hp\bbc\body-bend-count\feature points extraction\feature points extraction\feature points extraction.cpp(193): warning C4018: “<”: 有符号/无符号不匹配
+     1>c:\users\hp\bbc\body-bend-count\feature points extraction\feature points extraction\feature points extraction.cpp(202): warning C4018: “<”: 有符号/无符号不匹配
+     1>c:\users\hp\bbc\body-bend-count\feature points extraction\feature points extraction\feature points extraction.cpp(208): warning C4018: “<”: 有符号/无符号不匹配
+     1>c:\users\hp\bbc\body-bend-count\feature points extraction\feature points extraction\feature points extraction.cpp(216): warning C4018: “<”: 有符号/无符号不匹配
+     1>c:\users\hp\bbc\body-bend-count\feature points extraction\feature points extraction\feature points extraction.cpp(222): warning C4018: “<”: 有符号/无符号不匹配
+     1>c:\users\hp\bbc\body-bend-count\feature points extraction\feature points extraction\feature points extraction.cpp(229): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
+     1>c:\users\hp\bbc\body-bend-count\feature points extraction\feature points extraction\feature points extraction.cpp(253): warning C4018: “<=”: 有符号/无符号不匹配
+     1>c:\users\hp\bbc\body-bend-count\feature points extraction\feature points extraction\feature points extraction.cpp(254): warning C4018: “<=”: 有符号/无符号不匹配
+     1>c:\users\hp\bbc\body-bend-count\feature points extraction\feature points extraction\feature points extraction.cpp(321): warning C4305: “初始化”: 从“double”到“float”截断
+     1>c:\users\hp\bbc\body-bend-count\feature points extraction\feature points extraction\feature points extraction.cpp(327): warning C4244: “初始化”: 从“float”转换到“int”，可能丢失数据
+     1>c:\users\hp\bbc\body-bend-count\feature points extraction\feature points extraction\feature points extraction.cpp(327): warning C4018: “<”: 有符号/无符号不匹配
+     1>c:\users\hp\bbc\body-bend-count\feature points extraction\feature points extraction\feature points extraction.cpp(341): warning C4018: “<”: 有符号/无符号不匹配
+     1>c:\users\hp\bbc\body-bend-count\feature points extraction\feature points extraction\feature points extraction.cpp(352): warning C4018: “<”: 有符号/无符号不匹配
+     1>c:\users\hp\bbc\body-bend-count\feature points extraction\feature points extraction\feature points extraction.cpp(354): warning C4018: “>”: 有符号/无符号不匹配
+     1>c:\users\hp\bbc\body-bend-count\feature points extraction\feature points extraction\feature points extraction.cpp(389): warning C4018: “>”: 有符号/无符号不匹配
+     1>c:\users\hp\bbc\body-bend-count\feature points extraction\feature points extraction\feature points extraction.cpp(466): warning C4018: “<”: 有符号/无符号不匹配
+     1>c:\users\hp\bbc\body-bend-count\feature points extraction\feature points extraction\feature points extraction.cpp(472): warning C4018: “<”: 有符号/无符号不匹配
+     1>c:\users\hp\bbc\body-bend-count\feature points extraction\feature points extraction\feature points extraction.cpp(486): warning C4018: “<”: 有符号/无符号不匹配
+     1>c:\users\hp\bbc\body-bend-count\feature points extraction\feature points extraction\feature points extraction.cpp(504): warning C4018: “>”: 有符号/无符号不匹配
+     1>c:\users\hp\bbc\body-bend-count\feature points extraction\feature points extraction\feature points extraction.cpp(519): warning C4018: “>”: 有符号/无符号不匹配
+     1>c:\users\hp\bbc\body-bend-count\feature points extraction\feature points extraction\feature points extraction.cpp(532): warning C4018: “<”: 有符号/无符号不匹配
+     1>c:\users\hp\bbc\body-bend-count\feature points extraction\feature points extraction\feature points extraction.cpp(536): warning C4018: “<”: 有符号/无符号不匹配
+     1>c:\users\hp\bbc\body-bend-count\feature points extraction\feature points extraction\feature points extraction.cpp(540): warning C4018: “<”: 有符号/无符号不匹配
+     1>c:\users\hp\bbc\body-bend-count\feature points extraction\feature points extraction\feature points extraction.cpp(547): warning C4018: “<”: 有符号/无符号不匹配
+     1>c:\users\hp\bbc\body-bend-count\feature points extraction\feature points extraction\feature points extraction.cpp(549): warning C4018: “<”: 有符号/无符号不匹配
+     1>c:\users\hp\bbc\body-bend-count\feature points extraction\feature points extraction\feature points extraction.cpp(614): warning C4305: “初始化”: 从“double”到“float”截断
+     1>c:\users\hp\bbc\body-bend-count\feature points extraction\feature points extraction\feature points extraction.cpp(623): warning C4018: “<”: 有符号/无符号不匹配
+     1>c:\users\hp\bbc\body-bend-count\feature points extraction\feature points extraction\feature points extraction.cpp(628): warning C4018: “<”: 有符号/无符号不匹配
+     1>c:\users\hp\bbc\body-bend-count\feature points extraction\feature points extraction\feature points extraction.cpp(633): warning C4018: “<”: 有符号/无符号不匹配
+     1>c:\users\hp\bbc\body-bend-count\feature points extraction\feature points extraction\feature points extraction.cpp(725): warning C4018: “<”: 有符号/无符号不匹配
+     1>c:\users\hp\bbc\body-bend-count\feature points extraction\feature points extraction\feature points extraction.cpp(729): warning C4018: “<”: 有符号/无符号不匹配
+     1>c:\users\hp\bbc\body-bend-count\feature points extraction\feature points extraction\feature points extraction.cpp(744): warning C4018: “<”: 有符号/无符号不匹配
        Link:
-         F:\rjaz\VS2013\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\Body-Bend-Analysis\feature points extraction\feature points extraction\\bin\feature points extraction.exe" /INCREMENTAL /NOLOGO /LIBPATH:libs /LIBPATH:libs\opencv\x86\vc12 opencv_world300d.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:\Body-Bend-Analysis\feature points extraction\feature points extraction\\bin\feature points extraction.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\Body-Bend-Analysis\feature points extraction\feature points extraction\\bin\feature points extraction.lib" /MACHINE:X86 .\tmp\stdafx.obj
+         F:\rjaz\VS2013\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\HP\BBC\Body-Bend-Count\feature points extraction\feature points extraction\\bin\feature points extraction.exe" /INCREMENTAL /NOLOGO /LIBPATH:libs /LIBPATH:libs\opencv\x86\vc12 opencv_world300d.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\HP\BBC\Body-Bend-Count\feature points extraction\feature points extraction\\bin\feature points extraction.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\HP\BBC\Body-Bend-Count\feature points extraction\feature points extraction\\bin\feature points extraction.lib" /MACHINE:X86 .\tmp\stdafx.obj
          .\tmp\Timer.obj
          ".\tmp\feature points extraction.obj"
          .\tmp\WormTrack.obj
-         feature points extraction.vcxproj -> D:\Body-Bend-Analysis\feature points extraction\feature points extraction\\bin\feature points extraction.exe
-     1>已完成生成项目“D:\Body-Bend-Analysis\feature points extraction\feature points extraction\feature points extraction.vcxproj”(Build 个目标)的操作。
+         feature points extraction.vcxproj -> C:\Users\HP\BBC\Body-Bend-Count\feature points extraction\feature points extraction\\bin\feature points extraction.exe
+     1>已完成生成项目“C:\Users\HP\BBC\Body-Bend-Count\feature points extraction\feature points extraction\feature points extraction.vcxproj”(Build 个目标)的操作。
 
 生成成功。
 
-已用时间 00:00:01.19
+已用时间 00:00:05.06

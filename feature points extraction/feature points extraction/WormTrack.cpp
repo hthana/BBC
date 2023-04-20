@@ -62,37 +62,37 @@ int WormTrack::Resize()
 
 int WormTrack::PreProcess()
 {
-	//Step 0: resize the image
+
 	Resize();
-	//Step 1: filtering
+
 	if (guass)
 	{
 		GaussianBlur(img, img, Size(guass, guass), 1, 1);
 	}
-	//Step 2: threshold
-	threshold(img, img, thre, 255, CV_THRESH_BINARY_INV);//CV_THRESH_BINARY_INV
-	//Step 3: dilate and erode
+
+	threshold(img, img, thre, 255, CV_THRESH_BINARY_INV);
+	
 	dilate(img, img, morphology_element);
 	erode(img, img, morphology_element);
-	//imwrite("binary.jpg", img);
+
 	return 1;
 }
 
-int WormTrack::PreProcessDF()  //darkfeild
+int WormTrack::PreProcessDF() 
 {
-	//Step 0: resize the image
+
 	Resize();
-	//Step 1: filtering
+
 	if (guass)
 	{
 		GaussianBlur(img, img, Size(guass, guass), 1, 1);
 	}
-	//Step 2: threshold
+	
 	threshold(img, img, thre, 255, CV_THRESH_BINARY);
-	//Step 3: dilate and erode
+
 	dilate(img, img, morphology_element);
 	erode(img, img, morphology_element);
-	//imwrite("binary.jpg", img);
+
 	return 1;
 }
 
@@ -100,26 +100,26 @@ int WormTrack::Contour()
 {
 	vector<vector<Point>> rough_contours;
 	vector<Point> smooth_contours, contours, dist_contour, tab;
-	//Step 4: find contours
+
 	findContours(img, rough_contours, hierarchy, CV_RETR_CCOMP, CV_CHAIN_APPROX_SIMPLE);
 	if (rough_contours.size() == 0)
 	{
 		return 0;
 	}
-	//Step 5: remove small contours	
+
 	RemoveSmallContours(&rough_contours, hierarchy, contours);
-	//Step 6: smooth contours             // its a kind of image convolution
+
 	SmoothSequence(&contours, smooth_contours, 3);
 
 	vector<Point> pre_contour;
 	pre_contour.assign(smooth_contours.begin()+1,smooth_contours.end());
 	pre_contour.push_back(smooth_contours[0]);
 
-//	ResampleDist(&pre_contour, dist_contour, tab, pre_contour.size());
+
 	int num = pre_contour.size() < 300 ? pre_contour.size() : 300;
 	ResampleDist(&pre_contour, dist_contour, tab, num);
 	CompensateOffset(&dist_contour, &comp_contours, A);
-	//Step 7: calculate the mass center
+
 	Moments mu = moments(contours, true);
 	mc = Point2f(mu.m10 / mu.m00, mu.m01 / mu.m00);
 
@@ -128,7 +128,7 @@ int WormTrack::Contour()
 
 int WormTrack::Analysis()
 {
-	//Step 7: find head and tail
+
 	if (comp_contours.size() == 0)
 	{
 		return 0;
@@ -136,7 +136,7 @@ int WormTrack::Analysis()
 
 	FindHeadTail(&comp_contours, boundA, boundB, head, tail, comp_contours.size() / 40 > 1 ? comp_contours.size() / 40 : 1, comp_contours.size() / 100 > 1 ? comp_contours.size() / 100 : 1, 0.2);
 
-	//Step 8: find the centerline
+
 	segment.contourA = boundA;
 	segment.contourB = boundB;
 	segment.contour = comp_contours;
@@ -150,9 +150,9 @@ int WormTrack::Analysis()
 	
 	vector<Point> cA, cB;
 
-//	SmoothSequence(&boundA, cA, 1);
+
 	ResampleDist(&boundA, segment.scontourA, segment.tabA, partnum);
-//	SmoothSequence(&boundB, cB, 1);
+
 	ResampleDist(&boundB, segment.scontourB, segment.tabB, partnum);
 
 	newFindCenterline(&segment.contourA, &segment.contourB, &centerline, partnum, 3);
@@ -284,7 +284,6 @@ int WormTrack::curvature(vector<Point>* input, vector<double>& output, int step)
 		pminus = scenter[iminus < 0 ? iminus + scenter.size() : iminus];
 		pplus = scenter[iplus > scenter.size() ? iplus - scenter.size() : iplus];
 
-		//Derivative 
 		f1stDerivative.x = (pplus.x - pminus.x) / (iplus - iminus);
 		f1stDerivative.y = (pplus.y - pminus.y) / (iplus - iminus);
 		f2ndDerivative.x = (pplus.x - 2 * pos.x + pminus.x) / ((iplus - iminus) / 2 * (iplus - iminus) / 2);
@@ -331,7 +330,7 @@ int WormTrack::ResampleDist_2f(vector<Point>* input, vector<Point2f>& output, ve
 
 	int preindex = 0, currindex = 1;
 
-	output.push_back((*input)[0]); // save the first point
+	output.push_back((*input)[0]); 
 	lookuptab.push_back(Point(0, 0));
 
 
@@ -345,7 +344,6 @@ int WormTrack::ResampleDist_2f(vector<Point>* input, vector<Point2f>& output, ve
 			currindex++;
 		}
 
-		//currindex <= input->size() ? currindex : input->size();
 		weightA = (dist[currindex] - length) / (dist[currindex] - dist[preindex]);
 		weightB = 1 - weightA;
 
@@ -354,13 +352,13 @@ int WormTrack::ResampleDist_2f(vector<Point>* input, vector<Point2f>& output, ve
 
 		output.push_back(pt);
 
-		//generate a look up table to find the corresponding point in the previous sequence
+
 		lookup.x = i;
 		lookup.y = weightA > weightB ? preindex : currindex;
 		lookuptab.push_back(lookup);
 	}
 
-	output.push_back((*input)[input->size() - 1]); // save the last point
+	output.push_back((*input)[input->size() - 1]); 
 	lookuptab.push_back(Point(pointnum, input->size() - 1));
 
 	free(dist);
@@ -369,13 +367,13 @@ int WormTrack::ResampleDist_2f(vector<Point>* input, vector<Point2f>& output, ve
 
 int WormTrack::Segment()
 {
-	//Step 7: find head and tail
+
 	if (comp_contours.size() == 0)
 	{
 		return 0;
 	}
 
-	//Step 9: segment the worm
+
 	newSegmentWorm(&centerline, &boundA, &boundB, &segment);
 
 	return 1;
@@ -399,7 +397,7 @@ void WormTrack::RemoveSmallContours(vector<vector<Point>> *rough_contours, vecto
 			}
 		}
 		contours = (*rough_contours)[regionnumber];
-		//		contours.assign((*rough_contours)[regionnumber].begin(), (*rough_contours)[regionnumber].end());
+	
 	}
 
 }
@@ -474,11 +472,11 @@ void WormTrack::FindHeadTail(vector<Point>* input, vector<Point>& leftside, vect
 
 	for (int i = 0; i < totallength; i++)
 	{
-		// long vector dot product
+	
 		pt_fa[i] = (*input)[(i + longvector) % totallength] - (*input)[i];
 		pt_ba[i] = (*input)[(i - longvector + totallength) % totallength] - (*input)[i];
 		dotproduct_1[i] = pt_fa[i].x * pt_ba[i].x + pt_fa[i].y * pt_ba[i].y;
-		// short vector dot product
+
 		pt_fa[i] = (*input)[(i + shortvector) % totallength] - (*input)[i];
 		pt_ba[i] = (*input)[(i - shortvector + totallength) % totallength] - (*input)[i];
 		dotproduct_2[i] = pt_fa[i].x * pt_ba[i].x + pt_fa[i].y * pt_ba[i].y;
@@ -487,7 +485,7 @@ void WormTrack::FindHeadTail(vector<Point>* input, vector<Point>& leftside, vect
 	}
 
 
-	// find the tail
+
 	int MostCurvy = dotproduct[0];
 	int indextail = 0;
 	for (int i = 0; i < totallength; i++)
@@ -501,10 +499,9 @@ void WormTrack::FindHeadTail(vector<Point>* input, vector<Point>& leftside, vect
 
 	tail = (*input)[indextail];
 
-	// find the head
-	//	float PercentLength = 0.4; // search PercentLength curve length for the head
+
 	int searchlength = totallength*PercentLength;
-	int SecondMostCurvyIndex = (indextail + totallength / 2) % totallength; // a prediction of the head
+	int SecondMostCurvyIndex = (indextail + totallength / 2) % totallength; 
 	int StartIndex = (SecondMostCurvyIndex - searchlength / 2 + totallength) % totallength;
 	int EndIndex = (SecondMostCurvyIndex + searchlength / 2 + totallength) % totallength;
 
@@ -532,7 +529,6 @@ void WormTrack::FindHeadTail(vector<Point>* input, vector<Point>& leftside, vect
 	}
 	head = (*input)[indexhead];
 
-	// find the left and right sides
 	if (indexhead > indextail)
 	{
 		StartIndex = indextail;
@@ -573,7 +569,7 @@ void WormTrack::FindHeadTail(vector<Point>* input, vector<Point>& leftside, vect
 		pre_tail = temph;
 	}
 
-	// switch head and tail according to the previous result
+
 	if (Dist(pre_head, head) > Dist(pre_head, tail) && (pre_head.x + pre_head.y != 0))
 	{
 		Point pTemp;
@@ -655,7 +651,7 @@ int WormTrack::ResampleDist(vector<Point>* input, vector<Point>& output, vector<
 
 	int preindex = 0, currindex = 1;
 
-	output.push_back((*input)[0]); // save the first point
+	output.push_back((*input)[0]); 
 	lookuptab.push_back(Point(0,0));
 
 
@@ -669,7 +665,7 @@ int WormTrack::ResampleDist(vector<Point>* input, vector<Point>& output, vector<
 			currindex++;
 		}
 
-		//currindex <= input->size() ? currindex : input->size();
+
 		weightA = (dist[currindex] - length) / (dist[currindex] - dist[preindex]);
 		weightB = 1 - weightA;
 
@@ -678,13 +674,13 @@ int WormTrack::ResampleDist(vector<Point>* input, vector<Point>& output, vector<
 
 		output.push_back(pt);
 
-		//generate a look up table to find the corresponding point in the previous sequence
+
 		lookup.x = i;
 		lookup.y = weightA > weightB ? preindex : currindex;
 		lookuptab.push_back(lookup);
 	}
 
-	output.push_back((*input)[input->size() - 1]); // save the last point
+	output.push_back((*input)[input->size() - 1]);
 	lookuptab.push_back(Point(pointnum, input->size() - 1));
 
 	free(dist);
@@ -707,7 +703,7 @@ void WormTrack::SegmentWorm(vector<Point>* ReCenterline, vector<Point>* Centerli
 	Point forward, backward;
 	int indexA = 0, indexB = 0;
 	Point resultA = (*BoundA)[0], resultB = (*BoundB)[0];
-	//	vector<Point> temp;
+
 
 
 	int	averlength = (int)((float)(BoundA->size() > BoundB->size() ? BoundA->size() : BoundB->size()) / ReCenterline->size() + 0.5);
@@ -723,9 +719,6 @@ void WormTrack::SegmentWorm(vector<Point>* ReCenterline, vector<Point>* Centerli
 
 		indexA = FindPerpPoint(BoundA, (*ReCenterline)[i], targent, resultA, ReCenterline->size() - 1, indexA, indexA + averlength * 2);
 		indexB = FindPerpPoint(BoundB, (*ReCenterline)[i], targent, resultB, ReCenterline->size() - 1, indexB, indexB + averlength * 2);
-
-//		indexA = FindPerpPoint(BoundA, (*ReCenterline)[i], targent, resultA, ReCenterline->size() - 1, 0, BoundA->size() - 1);
-//		indexB = FindPerpPoint(BoundB, (*ReCenterline)[i], targent, resultB, ReCenterline->size() - 1, 0, BoundB->size() - 1);
 
 		segment->segAB.push_back(Point(indexA, indexB));
 	}
@@ -785,9 +778,7 @@ int WormTrack::FindPerpPoint(vector<Point>* input, Point x, Point targent, Point
 	startindex = startindex <= input->size() - 1 ? startindex : input->size() - 1;
 	endindex = endindex <= input->size() - 1 ? endindex : input->size() - 1;
 
-	// not accurate, since temp is a dot product of two vectors. This cannot guarantee the 
-	
-	// a1/b1 * a2/b2 = -1 -> temp = a1a2 + b1b2
+
 	for (int i = startindex ; i <= endindex; i++)
 	{
 		pt = (*input)[i] - x;
@@ -834,15 +825,15 @@ void  WormTrack::newFindCenterline(vector<Point>* BoundA, vector<Point>* BoundB,
 
 
 		roughcenterline.push_back(CenterA);
-		//centerline->push_back(CenterA);
+
 	}
 
 	vector<Point> pre_center;
 
 	SmoothSequence(&roughcenterline, pre_center, 1);
 
-	pre_center.insert(pre_center.begin(), newboundA[0]); // insert the first point
-	pre_center.push_back(newboundA[newboundA.size() - 1]); // insert the last point
+	pre_center.insert(pre_center.begin(), newboundA[0]); 
+	pre_center.push_back(newboundA[newboundA.size() - 1]); 
 
 	vector<Point> tabC;
 	ResampleDist(&pre_center, *centerline, tabC, partnum);

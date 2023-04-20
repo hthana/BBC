@@ -1,7 +1,7 @@
 
 #include "stdafx.h"
-#include "Timer.h" //to analysis the performance of the algorithm
-#include "WormTrack.h" //the class I developed for worm shape analysis
+#include "Timer.h" 
+#include "WormTrack.h" 
 
 using namespace std;
 using namespace cv;
@@ -9,7 +9,6 @@ using namespace cv;
 int RefineCurvature(seg* segment, vector<Point>& cur);
 int DrawImage(seg& segment, Mat& I, int partnum, vector<Point> cur);
 
-/*functions for curvature feature analysis*/
 int CurvatureAnalysis(vector<double>* curvature, vector<Point>& cur);
 int RefineCurvature(seg* segment, vector<Point>& cur);
 int FindMax(vector<double>* input, int start, int end);
@@ -17,50 +16,50 @@ int FindMin(vector<double>* input, int start, int end);
 int FindPerpPoint(vector<Point>* input, Point x, Point targent, Point &result, int startindex, int endindex);
 void Smooth1DSequence(const vector<double>* input, vector<double>& output, double sigma);
 
-/*initialized parameters*/
+
 Point m_A = Point(0, 0);
-//Point m_B = Point(2040, 1088);
-Point m_B = Point(1292, 964);
+
+Point m_B = Point(480, 360);
 Point head = Point(0, 0);
 Point tail = Point(0, 0);
 
 int main()
 {
-	myTimer Timer; // to record time cost
-	seg segment; // to save analysis results
+	myTimer Timer; 
+	seg segment; 
 	
-	// initiate parameters
+
 	segment.head = head;
 	segment.tail = tail;
 
-	ofstream file("HTP.csv");
-	ofstream file1("PKP.csv");
-	ofstream file2("IFP.csv");
-	for (int j = 1; j <= 600; j++) 
+	ofstream file("Pharynx.csv");
+	ofstream file1("PeakPoints.csv");
+	ofstream file2("InflectionPoints.csv");
+	for (int j = 1; j <= 200; j++) 
 	{
-		/*load images*/
+
 		string folder = "samples\\";
 		string n, b;
 		n = to_string(j);
-		b = folder + n + ".jpg";
+		b = folder + n + ".png";
 		string name(b);
-	    Mat I = imread(name, 0); // for worm shape analysis
-		Mat I_color = imread(name, 1); // to record the analysis result
+	    Mat I = imread(name, 0); 
+		Mat I_color = imread(name, 1); 
 
-		/*set parameters*/
+
 		int guassian = 1;
 		int threshold = 70;
 		int morpology = 1;
 		bool switchht = 0;
 		int partnum = 120;
 
-		/*create instant for worm shape analysis*/
+
 		WormTrack Track(I, 1, guassian, threshold, morpology, partnum, m_A, m_B, &segment, switchht);
 		
 		string s = "time cost for image " + to_string(j);
-		Timer.StartTimer(s.c_str()); // record time cost
+		Timer.StartTimer(s.c_str()); 
 
-		/*start image processing*/
+
 		Track.PreProcess();
 		Track.Contour();
 		Track.Analysis();
@@ -72,17 +71,17 @@ int main()
 
 		Timer.StopTimer();
 		
-		segment = Track.segment; // copy results
+		segment = Track.segment; 
 
-		/*feature analysis*/
+	
 		vector<Point> cur;
-		RefineCurvature(&segment, cur); //2ms
-		/*draw analysis results*/
+		RefineCurvature(&segment, cur); 
+		
 		DrawImage(segment, I_color, partnum, cur);
-		//save results
+		
 		folder += "analysis results\\";
 		string a;
-		a = folder + n + "_.jpg";
+		a = folder + n + "_.png";
 		string c(a);
 		imwrite(c, I_color);
 		head = segment.head;
@@ -91,18 +90,17 @@ int main()
 		m_B = Track.segment.botright + Point(50, 50);
 		cout << "segment.center: " << segment.center[12] << "\n";
 		
-		cout << "Head " << head << "Tail" << tail << "\n";
+		
 		if (file)
 		{
-			file << head.x << "," << head.y << "," << tail.x << "," << tail.y << "," << segment.center[12].x << "," << segment.center[12].y;
+			file << segment.center[12].x << "," << segment.center[12].y;
 		}
 	
 		for (int i = 0; i < cur.size(); i++)
 		{
 			if (cur[i].x == 0)
 			{
-				//circle(overlay, segment.center[cur[i].y] - m_A, 5, Scalar(0, 0, 255), 2, 8, 0);//red
-				//circle(overlay, segment.center[cur[i].y] - m_A, 5, Scalar(0, 0, 255), -1, 8, 0);//red
+
 				cout << "inflection point: " << segment.center[cur[i].y] << "\n";
 				if (file2)
 				{
@@ -111,8 +109,7 @@ int main()
 			}
 			else if (cur[i].x == -1)
 			{
-				//circle(overlay, segment.center[cur[i].y] - m_A, 5, Scalar(0, 255, 255), 2, 8, 0);//yellow
-				//circle(overlay, segment.center[cur[i].y] - m_A, 5, Scalar(0, 255, 255), -1, 8, 0);//yellow
+			
 				cout << "peak point: " << segment.center[cur[i].y] << "\n";
 				if (file1)
 				{
@@ -121,8 +118,7 @@ int main()
 			}
 			else
 			{
-				//circle(overlay, segment.center[cur[i].y] - m_A, 5, Scalar(0, 255, 255), 2, 8, 0);//yellow
-				//circle(overlay, segment.center[cur[i].y] - m_A, 5, Scalar(0, 255, 255), -1, 8, 0);//yellow
+
 				cout << "peak point: " << segment.center[cur[i].y] << "\n";
 				if (file1)
 				{
@@ -177,17 +173,17 @@ int RefineCurvature(seg* segment, vector<Point>& result)
 	curvatureA.insert(curvatureA.begin(), (segment->curvatureA).begin() + 1, (segment->curvatureA).end() - 1);
 	curvatureB.insert(curvatureB.begin(), (segment->curvatureB).begin() + 1, (segment->curvatureB).end() - 1);
 
-	Smooth1DSequence(&(curvatureA), scurvA, 3); // 1 point difference to the curvature
-	Smooth1DSequence(&(curvatureB), scurvB, 3); // 1 point difference to the curvature
+	Smooth1DSequence(&(curvatureA), scurvA, 3); 
+	Smooth1DSequence(&(curvatureB), scurvB, 3); 
 
 
-	int a, b;  // search from a to b
+	int a, b; 
 	a = 0;
 
 	int length = ((segment->Partnum / curC.size()) > 1 ? (segment->Partnum / curC.size()) : 1) * 1.5;
 
 	Point backward, forward, tangent;
-	int step = 10; // to find perpendicular vector on boundaries
+	int step = 10; 
 	for (int i = 0; i < curC.size(); i++)
 	{
 		b = (a + length) < (segment->center.size() - 1) ? (a + length) : (segment->center.size() - 1);
@@ -253,9 +249,7 @@ int FindPerpPoint(vector<Point>* input, Point x, Point targent, Point &result, i
 	startindex = startindex <= input->size() - 1 ? startindex : input->size() - 1;
 	endindex = endindex <= input->size() - 1 ? endindex : input->size() - 1;
 
-	// not accurate, since temp is a dot product of two vectors.
 
-	// a1/b1 * a2/b2 = -1 -> temp = a1a2 + b1b2
 	for (int i = startindex; i <= endindex; i++)
 	{
 		pt = (*input)[i] - x;
@@ -311,12 +305,12 @@ int CurvatureAnalysis(vector<double>* curvature, vector<Point>& cur)
 		return 0;
 	}
 
-	// smooth sequence
+
 	vector<double> curv, scurv, super_scurv;
 	curv.insert(curv.begin(), curvature->begin() + 1, curvature->end() - 1);
 
-	Smooth1DSequence(&curv, scurv, 1);   // 1 point difference to the curvature
-	Smooth1DSequence(&curv, super_scurv, 3); // 1 point difference to the curvature
+	Smooth1DSequence(&curv, scurv, 1);   
+	Smooth1DSequence(&curv, super_scurv, 3); 
 
 	float omit =0.08;
 	for (int i = 0; i < curv.size()*omit; i++)
@@ -337,10 +331,9 @@ int CurvatureAnalysis(vector<double>* curvature, vector<Point>& cur)
 	Point Tailpeak = Point(0, 0);
 
 
-	// find the zeros
 	for (int i = 0; i < scurv.size() - 1; i++)
 	{
-		if (scurv[i] == 0 || scurv[i + 1] * scurv[i] <0)  // find all points on zeros
+		if (scurv[i] == 0 || scurv[i + 1] * scurv[i] <0) 
 		{
 			pre_Zeros.push_back(i);
 
@@ -348,16 +341,16 @@ int CurvatureAnalysis(vector<double>* curvature, vector<Point>& cur)
 
 	}
 
-	// find peaks in the center body
+
 	for (int i = 0; i < pre_Zeros.size() - 1; i++)
 	{
-		if (pre_Zeros[i + 1] - pre_Zeros[i] > curv.size() / 6 && scurv[pre_Zeros[i] + 1] > 0) // maximum
+		if (pre_Zeros[i + 1] - pre_Zeros[i] > curv.size() / 6 && scurv[pre_Zeros[i] + 1] > 0) 
 		{
 			double Max = 0;
 			int indexMax = pre_Zeros[i] + 1;
 			for (int j = pre_Zeros[i] + 1; j < pre_Zeros[i + 1] - 1; j++)
 			{
-				if (Max < super_scurv[j])  // super_scure is more smooth
+				if (Max < super_scurv[j])  
 				{
 					Max = super_scurv[j];
 					indexMax = j;
@@ -365,7 +358,7 @@ int CurvatureAnalysis(vector<double>* curvature, vector<Point>& cur)
 			}
 			pre_Max.push_back(indexMax);
 
-			// store zeros
+		
 			if (Zeros.size() == 0)
 			{
 				Zeros.push_back(pre_Zeros[i]);
@@ -386,20 +379,20 @@ int CurvatureAnalysis(vector<double>* curvature, vector<Point>& cur)
 
 		}
 
-		if (pre_Zeros[i + 1] - pre_Zeros[i] > curv.size() / 6 && scurv[pre_Zeros[i] + 1] < 0) // 
+		if (pre_Zeros[i + 1] - pre_Zeros[i] > curv.size() / 6 && scurv[pre_Zeros[i] + 1] < 0) 
 		{
 			double Min = 100;
 			int indexMin = pre_Zeros[i] + 1;
 			for (int j = pre_Zeros[i] + 1; j < pre_Zeros[i + 1] - 1; j++)
 			{
-				if (Min > super_scurv[j])  // super_scure is more smooth
+				if (Min > super_scurv[j]) 
 				{
 					Min = super_scurv[j];
 					indexMin = j;
 				}
 			}
 			pre_Min.push_back(indexMin);
-			// store zeros
+		
 			if (Zeros.size() == 0)
 			{
 				Zeros.push_back(pre_Zeros[i]);
@@ -422,7 +415,7 @@ int CurvatureAnalysis(vector<double>* curvature, vector<Point>& cur)
 	}
 
 
-	// find minimum and maximum before the first zero point
+
 
 	if (Zeros.size() != 0)
 	{
@@ -434,7 +427,7 @@ int CurvatureAnalysis(vector<double>* curvature, vector<Point>& cur)
 				int indexMax = 1;
 				for (int j = 1; j < Zeros[0] - 1; j++)
 				{
-					if (Max < super_scurv[j])  // super_scure is more smooth
+					if (Max < super_scurv[j])  
 					{
 						Max = super_scurv[j];
 						indexMax = j;
@@ -448,7 +441,7 @@ int CurvatureAnalysis(vector<double>* curvature, vector<Point>& cur)
 				int indexMin = 0;
 				for (int j = 1; j < Zeros[0] - 1; j++)
 				{
-					if (Min > super_scurv[j])  // super_scure is more smooth
+					if (Min > super_scurv[j])  
 					{
 						Min = super_scurv[j];
 						indexMin = j;
@@ -460,7 +453,6 @@ int CurvatureAnalysis(vector<double>* curvature, vector<Point>& cur)
 	}
 
 
-	// find minimum and maximum after the last zero point
 	if (Zeros.size() != 0)
 	{
 		if (Zeros[Zeros.size() - 1] < scurv.size() - 1)
@@ -471,7 +463,7 @@ int CurvatureAnalysis(vector<double>* curvature, vector<Point>& cur)
 				int indexMax = Zeros[Zeros.size() - 1] + 1;
 				for (int j = Zeros[Zeros.size() - 1] + 1; j < scurv.size() - 2; j++)
 				{
-					if (Max < super_scurv[j])  // super_scure is more smooth
+					if (Max < super_scurv[j])  
 					{
 						Max = super_scurv[j];
 						indexMax = j;
@@ -485,7 +477,7 @@ int CurvatureAnalysis(vector<double>* curvature, vector<Point>& cur)
 				int indexMin = Zeros[Zeros.size() - 1] + 1;
 				for (int j = Zeros[Zeros.size() - 1] + 1; j < scurv.size() - 2; j++)
 				{
-					if (Min > super_scurv[j])  // super_scure is more smooth
+					if (Min > super_scurv[j])
 					{
 						Min = super_scurv[j];
 						indexMin = j;
@@ -498,7 +490,6 @@ int CurvatureAnalysis(vector<double>* curvature, vector<Point>& cur)
 	}
 
 
-	//store headpeak and tailpeak
 	if (Headpeak != Point(0, 0) && Zeros.size() != 0)
 	{
 		if (Zeros[0] - Headpeak.y > scurv.size() / 8)
@@ -545,9 +536,9 @@ int CurvatureAnalysis(vector<double>* curvature, vector<Point>& cur)
 	if (cur.size() != 0)
 	{
 		for (int i = 0; i < cur.size() - 1; i++)
-		{ // times
+		{ 
 			for (int j = 0; j < cur.size() - i - 1; j++)
-			{ // position
+			{ 
 				if (cur[j].y > cur[j + 1].y)
 				{
 					Point temp = cur[j];
@@ -580,7 +571,7 @@ void Smooth1DSequence(const vector<double>* input, vector<double>& output, doubl
 		normfactor += (kernel)[x];
 	}
 
-	/// filtering
+
 	int j, k, ind, anchor;
 	double sum;
 
@@ -610,7 +601,7 @@ void Smooth1DSequence(const vector<double>* input, vector<double>& output, doubl
 
 int DrawImage(seg& segment, Mat& I, int partnum, vector<Point> cur)
 {
-	//parameters
+	
 	float offsite = 0.2;
 	float extension = 1;
 
@@ -635,12 +626,10 @@ int DrawImage(seg& segment, Mat& I, int partnum, vector<Point> cur)
 		newContourB.push_back(segment.contourB[i] - m_A);
 	}
 
-	// create small ROI     0.5 ms
 	Mat roi = I(cv::Rect(m_A, m_B));
 	Mat overlay;
 	roi.copyTo(overlay);
 
-	// generate pattern
 	vector<Point> controlA, controlB;
 	for (int i = 0; i < partnum; i++)
 	{
@@ -656,12 +645,11 @@ int DrawImage(seg& segment, Mat& I, int partnum, vector<Point> cur)
 		}
 	}
 
-	// draw pattern on small ROI      5 ms
 	vector<Point> SegContours;
 
 	Point Int, Ext;
 	vector<Point> SegCountours, BoundA, BoundB;
-	for (int i = 0; i < segment.Partnum; i++)      // combine the conencted countours to a single one
+	for (int i = 0; i < segment.Partnum; i++)     
 	{
 		if (controlA[i].y != 0)
 		{
@@ -678,7 +666,7 @@ int DrawImage(seg& segment, Mat& I, int partnum, vector<Point> cur)
 			} while (controlA[i].y == controlA[i - 1].y);
 
 			Int = offsite*(newContourA[segment.segAB[i].x] - newCenter[i]) + newCenter[i];
-			SegCountours.push_back(Int);    // store one more point to make the pattern accurate
+			SegCountours.push_back(Int);   
 
 			Ext = extension*(newContourA[segment.segAB[i].x] - newCenter[i]) + newCenter[i];
 			BoundA.push_back(Ext);
@@ -707,7 +695,7 @@ int DrawImage(seg& segment, Mat& I, int partnum, vector<Point> cur)
 			} while (controlB[i].y == controlB[i - 1].y);
 
 			Int = offsite*(newContourB[segment.segAB[i].y] - newCenter[i]) + newCenter[i];
-			SegCountours.push_back(Int);    // store one more point to make the pattern accurate
+			SegCountours.push_back(Int);    
 
 			Ext = extension*(newContourB[segment.segAB[i].y] - newCenter[i]) + newCenter[i];
 
@@ -721,42 +709,42 @@ int DrawImage(seg& segment, Mat& I, int partnum, vector<Point> cur)
 		}
 	}
 
-	// draw left and right sides      3.5 ms
+
 	for (int i = 0; i < segment.contourA.size() - 1; i++)
 	{
-		//line(overlay, newContourA[i], newContourA[i + 1], Scalar(0, 255, 255), 2, 8);//yellow
+	
 	}
 	for (int i = 0; i < segment.contourB.size() - 1; i++)
 	{
-		//line(overlay, newContourB[i], newContourB[i + 1], Scalar(0, 255, 255), 2, 8);//yellow
+	
 	}
 
 
 
 	circle(overlay, newCenter[12], 5, Scalar(255, 0, 255), -1, 8, 0);
 
-	circle(overlay, segment.head - m_A, 5, Scalar(0, 0, 255), -1, 8, 0);//red
+	circle(overlay, segment.head - m_A, 5, Scalar(0, 0, 255), -1, 8, 0);
 
 
-	circle(overlay, segment.tail - m_A, 5, Scalar(0, 255, 0), -1, 8, 0);//green
+	circle(overlay, segment.tail - m_A, 5, Scalar(0, 255, 0), -1, 8, 0);
 
-	// plot result
+
 	for (int i = 0; i < cur.size(); i++)
 	{
 		if (cur[i].x == 0)
 		{
-			//circle(overlay, segment.center[cur[i].y] - m_A, 5, Scalar(0, 0, 255), 2, 8, 0);//red
-			circle(overlay, segment.center[cur[i].y] - m_A, 5, Scalar(255, 255, 0), -1, 8, 0);//qingshe
+			
+			circle(overlay, segment.center[cur[i].y] - m_A, 5, Scalar(255, 255, 0), -1, 8, 0);
 		}
 		else if (cur[i].x == -1)
 		{
-			//circle(overlay, segment.center[cur[i].y] - m_A, 5, Scalar(0, 255, 255), 2, 8, 0);//yellow
-			circle(overlay, segment.center[cur[i].y] - m_A, 5, Scalar(0, 255, 255), -1, 8, 0);//yellow
+		
+			circle(overlay, segment.center[cur[i].y] - m_A, 5, Scalar(0, 255, 255), -1, 8, 0);
 		}
 		else
 		{
-			//circle(overlay, segment.center[cur[i].y] - m_A, 5, Scalar(0, 255, 255), 2, 8, 0);//yellow
-			circle(overlay, segment.center[cur[i].y] - m_A, 5, Scalar(0, 255, 255), -1, 8, 0);//yellow
+		
+			circle(overlay, segment.center[cur[i].y] - m_A, 5, Scalar(0, 255, 255), -1, 8, 0);
 		}
 	}
 

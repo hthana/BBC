@@ -15,15 +15,15 @@ using namespace cv;
 struct seg
 {
 	int Partnum;
-	vector<Point> segAB; // Point(a, b) a: the index of the deviding point on contour A; b: the index of the deviding point on contour B; 
+	vector<Point> segAB; 
 	vector<Point> contourA;
 	vector<Point> contourB;
-	vector<Point> scontourA; // with defined points
-	vector<Point> scontourB; // with defined points
-	vector<Point> tabA; // the reference of contour to scontour
-	vector<Point> tabB; // the reference of contour to scontour
+	vector<Point> scontourA; 
+	vector<Point> scontourB; 
+	vector<Point> tabA; 
+	vector<Point> tabB; 
 
-	vector<Point> center; // with defined points
+	vector<Point> center; 
 	vector<Point> contour;
 	vector<double> curvatureA;
 	vector<double> curvatureB;
@@ -76,7 +76,7 @@ private:
 public:
 	int Resize();
 	seg segment;
-	seg output; // result is copied here for reading
+	seg output; 
 
 
 	int PreProcess();
@@ -99,7 +99,7 @@ private:
 	void FindHeadTail(vector<Point>* input, vector<Point>& leftside, vector<Point>& rightside, Point &head, Point &tail, const int longvector, const int shortvector, float PercentLength);
 	void ResampleByOmit(vector<Point>* input, vector<Point>& output, int pointnum);
 	int ResampleDist(vector<Point>* input, vector<Point>& output, vector<Point>& lookuptab, int pointnum);
-	int ResampleDist_2f(vector<Point>* input, vector<Point2f>& output, vector<Point>& lookuptab, int pointnum); // for curvature calculation
+	int ResampleDist_2f(vector<Point>* input, vector<Point2f>& output, vector<Point>& lookuptab, int pointnum); 
 	int FindCenterline(vector<Point>* inputleft, vector<Point>* inputright, vector<Point>& centerline);
 	float Dist(Point a, Point b);
 	float SquareDist(Point a, Point b);

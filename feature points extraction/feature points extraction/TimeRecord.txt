@@ -1,1 +1,3 @@
-time cost for image 1(milli second): 182.695		Total Time: 182.695
+time cost for image 1(milli second): 212.557		Total Time: 212.557
+time cost for image 2(milli second): 4.60616		Total Time: 217.163
+time cost for image 3(milli second): 4.92824		Total Time: 222.091

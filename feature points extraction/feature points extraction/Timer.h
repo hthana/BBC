@@ -1,8 +1,8 @@
 #include "stdafx.h"
 
-#ifdef WIN32   // Windows system specific  
+#ifdef WIN32   
 #include <windows.h>
-#else          // Unix based system specific
+#else         
 #include <sys/time.h>
 #endif
 
